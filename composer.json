@@ -1,0 +1,28 @@
+{
+    "name": "phergie/phergie-irc-plugin-react-eventfilter",
+    "description": "Phergie plugin for limiting processing of incoming events based on event metadata",
+    "keywords": [ "irc", "bot", "react", "plugin" ],
+    "license": "BSD-2-Clause",
+    "support": {
+        "email": "team@phergie.org",
+        "irc": "irc://irc.freenode.net/phergie",
+        "issues": "https://github.com/phergie/phergie-irc-plugin-react-eventfilter/issues",
+        "source": "https://github.com/phergie/phergie-irc-plugin-react-eventfilter"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "phergie/phergie-irc-bot-react": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.0.*",
+        "phake/phake": "1.0.*"
+    },
+    "suggest": {
+        "phergie/phergie-irc-plugin-react-usermode": "supports filtering of events by channel modes of originating users"
+    },
+    "autoload": {
+        "psr-4": {
+            "Phergie\\Irc\\Plugin\\React\\EventFilter\\": "src"
+        }
+    }
+}
