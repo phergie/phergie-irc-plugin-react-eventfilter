@@ -11,14 +11,16 @@
 namespace Phergie\Irc\Plugin\React\EventFilter;
 
 use Phake;
+use Phergie\Irc\ConnectionInterface;
+use Phergie\Irc\Event\EventInterface;
 
 /**
- * Tests for the AndFilter class.
+ * Tests for the OrFilter class.
  *
  * @category Phergie
  * @package Phergie\Irc\Plugin\React\EventFilter
  */
-class AndFilterTest extends \PHPUnit_Framework_TestCase
+class OrFilterTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Data provider for testFilter().
@@ -31,8 +33,8 @@ class AndFilterTest extends \PHPUnit_Framework_TestCase
 
         $returns = array(
             array(false, false, false),
-            array(true, false, false),
-            array(false, true, false),
+            array(true, false, true),
+            array(false, true, true),
             array(true, true, true),
         );
 
@@ -58,7 +60,7 @@ class AndFilterTest extends \PHPUnit_Framework_TestCase
     public function testFilter(array $filters, $expected)
     {
         $event = Phake::mock('\Phergie\Irc\Event\EventInterface');
-        $filter = new AndFilter($filters);
+        $filter = new OrFilter($filters);
         $this->assertSame($expected, $filter->filter($event));
     }
 
