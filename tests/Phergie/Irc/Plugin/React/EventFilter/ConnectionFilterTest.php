@@ -11,8 +11,6 @@
 namespace Phergie\Irc\Plugin\React\EventFilter;
 
 use Phake;
-use Phergie\Irc\ConnectionInterface;
-use Phergie\Irc\Event\EventInterface;
 
 /**
  * Tests for the ConnectionFilter class.
