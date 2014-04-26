@@ -24,13 +24,13 @@ See Phergie documentation for more information on
 ```php
 use Phergie\Irc\Plugin\React\EventFilter;
 
+// Add this connection to the 'connections' setting value in bot configuration
 $connection = new \Phergie\Irc\Connection(array(
     // ...
 ));
 
+// Add both of these plugin instances to the 'plugins' setting value in bot configuration
 $userMode = new \Phergie\Irc\Plugin\React\UserMode\Plugin;
-
-// Add this instance to the 'plugins' setting value in bot configuration
 $eventFilter = new EventFilter\Plugin(array(
 
     // All configuration is required
