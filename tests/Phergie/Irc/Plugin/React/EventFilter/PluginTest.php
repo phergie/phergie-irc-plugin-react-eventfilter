@@ -12,7 +12,6 @@ namespace Phergie\Irc\Plugin\React\EventFilter;
 
 use Phake;
 use Phergie\Irc\Event\EventInterface;
-use Phergie\Irc\Bot\React\EventQueueInterface;
 use Phergie\Irc\Bot\React\PluginInterface;
 
 /**
@@ -127,6 +126,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $plugin = new Plugin($config);
+            $this->fail('Expected exception was not thrown');
         } catch (\RuntimeException $e) {
             $this->assertSame($code, $e->getCode());
         }
