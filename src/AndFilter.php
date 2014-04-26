@@ -29,6 +29,11 @@ class AndFilter implements FilterInterface
     protected $filters;
 
     /**
+     * Error code for when $filters contains an invalid filter
+     */
+    const ERR_FILTERS_INVALID = 1;
+
+    /**
      * Accepts a list of filters to apply.
      *
      * @param \Phergie\Irc\Plugin\React\EventFilter\FilterInterface[] $filters
@@ -36,18 +41,20 @@ class AndFilter implements FilterInterface
     public function __construct(array $filters)
     {
         $filtered = array_filter(
+            $filters,
             function($filter) {
                 return !$filter instanceof FilterInterface;
-            },
-            $filters
+            }
         );
         if ($filtered) {
             throw new \RuntimeException(
-                'All elements of $filters must implement \Phergie\Irc\Plugin\React\EventFilter\FilterInterface'
+                'All elements of $filters must implement'
+                    . ' \Phergie\Irc\Plugin\React\EventFilter\FilterInterface',
+                self::ERR_FILTERS_INVALID
             );
         }
 
-        $this->filters = $filter;
+        $this->filters = $filters;
     }
 
     /**
