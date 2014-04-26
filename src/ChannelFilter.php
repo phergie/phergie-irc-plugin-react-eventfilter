@@ -47,12 +47,39 @@ class ChannelFilter implements FilterInterface
     );
 
     /**
+     * Error code for when $channels contains an invalid channel name value
+     */
+    const ERR_CHANNELS_INVALID = 1;
+
+    /**
      * Accepts a list of channels from which to allow events.
      *
      * @param array $channels
+     * @throws \RuntimeException $channels contains an invalid channel name
+     *         value
      */
     public function __construct(array $channels)
     {
+        $filtered = array_filter(
+            $channels,
+            function($channel) {
+                return !(is_string($channel)
+                    && preg_match('/^[#&]/', $channel));
+            }
+        );
+        if ($filtered) {
+            $formatted = implode(', ', array_map(
+                function($value) {
+                    return var_export($value, true);
+                },
+                $filtered
+            ));
+            throw new \RuntimeException(
+                '$channels contains invalid values: ' . $formatted,
+                self::ERR_CHANNELS_INVALID
+            );
+        }
+
         $this->channels = $channels;
     }
 
