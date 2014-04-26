@@ -34,11 +34,20 @@ class Plugin extends AbstractPlugin
     protected $filter;
 
     /**
-     * Associative array mapping event names to instance method names or callbacks
-     *
-     * @var array
+     * Exception code used when 'plugins' is not an array
      */
-    protected $handlers = array();
+    const ERR_PLUGINS_NONARRAY = 1;
+
+    /**
+     * Exception code used when 'plugins' contains non-plugin objects
+     */
+    const ERR_PLUGINS_NONPLUGINS = 2;
+
+    /**
+     * Exception code used when 'filter' is not set or contains a non-filter
+     * object
+     */
+    const ERR_FILTER_INVALID = 3;
 
     /**
      * Accepts plugin configuration.
@@ -69,19 +78,23 @@ class Plugin extends AbstractPlugin
     protected function getPlugins(array $config)
     {
         if (!isset($config['plugins']) || !is_array($config['plugins'])) {
-            throw new \RuntimeException('Configuration must contain "plugins" key referencing an array');
+            throw new \RuntimeException(
+                'Configuration must contain "plugins" key referencing an array',
+                self::ERR_PLUGINS_NONARRAY
+            );
         }
 
         $filtered = array_filter(
+            $config['plugins'],
             function($plugin) {
                 return !$plugin instanceof PluginInterface;
-            },
-            $config['plugins']
+            }
         );
         if ($filtered) {
             throw new \RuntimeException(
                 'Configuration "plugins" key must contain only objects'
-                    . ' implementing \Phergie\Irc\Bot\React\PluginInterface'
+                    . ' implementing \Phergie\Irc\Bot\React\PluginInterface',
+                self::ERR_PLUGINS_NONPLUGINS
             );
         }
 
@@ -99,7 +112,8 @@ class Plugin extends AbstractPlugin
         if (!isset($config['filter']) || !$config['filter'] instanceof FilterInterface) {
             throw new \RuntimeException(
                 'Configuration must contain a "filter" key referencing an object'
-                    . ' implementing \Phergie\Irc\Plugin\EventFilter\FilterInterface'
+                    . ' implementing \Phergie\Irc\Plugin\EventFilter\FilterInterface',
+                self::ERR_FILTER_INVALID
             );
         }
 
@@ -117,15 +131,7 @@ class Plugin extends AbstractPlugin
         $events = array();
         $self = $this;
         foreach ($this->plugins as $plugin) {
-            foreach ($plugin->getSubscribedEvents() as $event => $callback) {
-                if (!isset($this->handlers[$event])) {
-                    $this->handlers[$event] = array();
-                }
-                $pluginCallback = array($plugin, $callback);
-                $this->handlers[$event][] = is_callable($pluginCallback)
-                    ? $pluginCallback
-                    : $callback;
-
+            foreach (array_keys($plugin->getSubscribedEvents()) as $event) {
                 if (isset($events[$event])) {
                     continue;
                 }
@@ -153,29 +159,79 @@ class Plugin extends AbstractPlugin
             return $arg instanceof EventInterface;
         });
         if (!$eventObjects) {
-            $logger->warning('Event emitted without EventInterface argument, skipping', array(
+            $logger->info('Event emitted without EventInterface argument', array(
                 'event' => $event,
                 'args' => $args,
             ));
-            return;
+        } else {
+            $eventObject = reset($eventObjects);
+            if (!$this->filter->filter($eventObject)) {
+                $logger->info('Event did not pass filter, skipping', array(
+                    'event' => $event,
+                    'args' => $args,
+                ));
+                return;
+            } else {
+                $logger->info('Event passed filter, forwarding', array(
+                    'event' => $event,
+                    'args' => $args,
+                ));
+            }
         }
 
-        $eventObject = reset($eventObjects);
-        if (!$this->filter->filter($eventObject)) {
-            $logger->debug('Event did not pass filter, skipping', array(
-                'event' => $event,
-                'args' => $args,
-            ));
-            continue;
-        }
-
-        foreach ($this->handlers[$event] as $callback) {
-            $logger->debug('Forwarding event to callback', array(
+        $callbacks = $this->getEventHandlers($event);
+        foreach ($callbacks as $callback) {
+            $logger->info('Forwarding event to callback', array(
                 'event' => $event,
                 'args' => $args,
                 'callback' => $callback,
             ));
             call_user_func_array($callback, $args);
         }
+    }
+
+    /**
+     * Returns handlers from contained plugins for a specified event.
+     *
+     * @param string $event
+     * @return array
+     */
+    protected function getEventHandlers($event)
+    {
+        $logger = $this->getLogger();
+        $handlers = array();
+
+        foreach ($this->plugins as $plugin) {
+            $callbacks = $plugin->getSubscribedEvents();
+            if (!is_array($callbacks)) {
+                $logger->warning('Plugin returns non-array value for event callbacks', array(
+                    'plugin' => get_class($plugin),
+                    'callbacks' => $callbacks,
+                ));
+                continue;
+            }
+            if (!isset($callbacks[$event])) {
+                $logger->debug('Plugin does not handle event', array(
+                    'plugin' => get_class($plugin),
+                    'event' => $event,
+                ));
+                continue;
+            }
+            $callback = $callbacks[$event];
+            $pluginCallback = array($plugin, $callback);
+            if (is_callable($pluginCallback)) {
+                $handlers[] = $pluginCallback;
+            } elseif (is_callable($callback)) {
+                $handlers[] = $callback;
+            } else {
+                $logger->warning('Plugin returns invalid event callback', array(
+                    'plugin' => get_class($plugin),
+                    'event' => $event,
+                    'callback' => $callback,
+                ));
+            }
+        }
+
+        return $handlers;
     }
 }
