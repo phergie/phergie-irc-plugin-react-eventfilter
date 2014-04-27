@@ -22,20 +22,39 @@ use Phergie\Irc\Event\EventInterface;
 class ConnectionFilter implements FilterInterface
 {
     /**
-     * Connection over which to allow events to be forwarded
+     * Connections over which to allow events to be forwarded
      *
-     * @var \Phergie\Irc\ConnectionInterface
+     * @var \Phergie\Irc\ConnectionInterface[]
      */
-    protected $connection;
+    protected $connections;
 
     /**
-     * Accepts the connection over which to allow events to be forwarded.
-     *
-     * @param \Phergie\Irc\ConnectionInterface $connection
+     * Error code for when $connections contains an invalid connection
      */
-    public function __construct(ConnectionInterface $connection)
+    const ERR_CONNECTIONS_INVALID = 1;
+
+    /**
+     * Accepts the connections over which to allow events to be forwarded.
+     *
+     * @param \Phergie\Irc\ConnectionInterface[] $connections
+     */
+    public function __construct($connections)
     {
-        $this->connection = $connection;
+        $filtered = array_filter(
+            $connections,
+            function($connection) {
+                return !$connection instanceof ConnectionInterface;
+            }
+        );
+        if ($filtered) {
+            throw new \RuntimeException(
+                'All elements of $connections must implement'
+                    . ' \Phergie\Irc\ConnectionInterface',
+                self::ERR_CONNECTIONS_INVALID
+            );
+        }
+
+        $this->connections = $connections;
     }
 
     /**
@@ -47,6 +66,6 @@ class ConnectionFilter implements FilterInterface
      */
     public function filter(EventInterface $event)
     {
-        return $event->getConnection() === $this->connection;
+        return in_array($event->getConnection(), $this->connections);
     }
 }
