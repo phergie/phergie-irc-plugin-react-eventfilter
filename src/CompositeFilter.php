@@ -13,7 +13,8 @@ namespace Phergie\Irc\Plugin\React\EventFilter;
 use Phergie\Irc\Event\EventInterface;
 
 /**
- * Forwards events based on responses of a set of contained filters.
+ * Base class for other filters that forward events based on responses from a
+ * set of contained filters.
  *
  * @category Phergie
  * @package Phergie\Irc\Plugin\React\EventFilter
