@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "1979be704d07a283e722618c23f0d324",
+    "hash": "db72adafa332cfa6f84f067c3f0ad0c6",
     "packages": [
         {
             "name": "evenement/evenement",
@@ -531,17 +531,57 @@
             "time": "2014-04-19 22:17:47"
         },
         {
+            "name": "phergie/phergie-irc-plugin-react-usermode",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phergie/phergie-irc-plugin-react-usermode.git",
+                "reference": "97e525d722698f808e96a9cff396b918cfd10ee4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phergie/phergie-irc-plugin-react-usermode/zipball/97e525d722698f808e96a9cff396b918cfd10ee4",
+                "reference": "97e525d722698f808e96a9cff396b918cfd10ee4",
+                "shasum": ""
+            },
+            "require": {
+                "phergie/phergie-irc-bot-react": "dev-master"
+            },
+            "require-dev": {
+                "phake/phake": "1.0.*",
+                "phpunit/phpunit": "4.0.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Phergie\\Irc\\Plugin\\React\\UserMode\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "description": "Phergie plugin for monitoring and providing access to user mode information",
+            "keywords": [
+                "bot",
+                "irc",
+                "plugin",
+                "react"
+            ],
+            "time": "2014-04-25 13:12:44"
+        },
+        {
             "name": "phpunit/php-code-coverage",
             "version": "2.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "aef655b2481c7ef8c8b73288c383261b2bb7e2a2"
+                "reference": "e3741b4937c32bc3b101e4c670083fe0ee78d225"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/aef655b2481c7ef8c8b73288c383261b2bb7e2a2",
-                "reference": "aef655b2481c7ef8c8b73288c383261b2bb7e2a2",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/e3741b4937c32bc3b101e4c670083fe0ee78d225",
+                "reference": "e3741b4937c32bc3b101e4c670083fe0ee78d225",
                 "shasum": ""
             },
             "require": {
@@ -558,7 +598,8 @@
             },
             "suggest": {
                 "ext-dom": "*",
-                "ext-xdebug": ">=2.2.1"
+                "ext-xdebug": ">=2.2.1",
+                "ext-xmlwriter": "*"
             },
             "type": "library",
             "extra": {
@@ -592,7 +633,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-04-03 03:26:47"
+            "time": "2014-04-26 09:30:11"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -783,16 +824,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "a8d628ee246265b8dbcd839304c41b8839783581"
+                "reference": "efdfca6bf1ee99d609b7b20ecf63c3818e3d2182"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a8d628ee246265b8dbcd839304c41b8839783581",
-                "reference": "a8d628ee246265b8dbcd839304c41b8839783581",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/efdfca6bf1ee99d609b7b20ecf63c3818e3d2182",
+                "reference": "efdfca6bf1ee99d609b7b20ecf63c3818e3d2182",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
+                "ext-json": "*",
                 "ext-pcre": "*",
                 "ext-reflection": "*",
                 "ext-spl": "*",
@@ -809,9 +851,6 @@
                 "symfony/yaml": "~2.0"
             },
             "suggest": {
-                "ext-json": "*",
-                "ext-simplexml": "*",
-                "ext-tokenizer": "*",
                 "phpunit/php-invoker": "~1.1"
             },
             "bin": [
@@ -850,7 +889,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-04-24 07:55:55"
+            "time": "2014-04-26 06:27:42"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -1166,7 +1205,8 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "phergie/phergie-irc-bot-react": 20
+        "phergie/phergie-irc-bot-react": 20,
+        "phergie/phergie-irc-plugin-react-usermode": 20
     },
     "platform": [
 
