@@ -254,9 +254,9 @@ functionality of the EventFilter plugin's contained plugins.
 ## Custom Filters
 
 Filters are merely classes that implement
-[FilterInterface](https://github.com/phergie/phergie-irc-plugin-react-eventfilter/blob/master/src/FilterInterface.php).
+[`FilterInterface`](https://github.com/phergie/phergie-irc-plugin-react-eventfilter/blob/master/src/FilterInterface.php).
 This interface has a single method, `filter()`, which accepts an event object
-that implements [EventInterface](https://github.com/phergie/phergie-irc-event/blob/master/src/EventInterface.php)
+that implements [`EventInterface`](https://github.com/phergie/phergie-irc-event/blob/master/src/EventInterface.php)
 as its only parameter and returns `true` if the event should be allowed or
 `false` if it should not.
 
