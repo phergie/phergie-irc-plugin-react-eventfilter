@@ -177,7 +177,8 @@ new UserFilter(array(
 #### UserModeFilter
 
 Allows events that are either not user-specific or originate from users with
-any of a specified list of modes, which are obtained using the
+any of a specified list of modes within the channel in which the events occur.
+This mode information is obtained using the
 [UserMode plugin](https://github.com/phergie/phergie-irc-plugin-react-usermode).
 
 ```php
@@ -252,7 +253,12 @@ functionality of the EventFilter plugin's contained plugins.
 
 ## Custom Filters
 
-TODO
+Filters are merely classes that implement
+[FilterInterface](https://github.com/phergie/phergie-irc-plugin-react-eventfilter/blob/master/src/FilterInterface.php).
+This interface has a single method, `filter()`, which accepts an event object
+that implements [EventInterface](https://github.com/phergie/phergie-irc-event/blob/master/src/EventInterface.php)
+as its only parameter and returns `true` if the event should be allowed or
+`false` if it should not.
 
 ## Tests
 
