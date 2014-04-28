@@ -93,10 +93,9 @@ return array(
             ),
         )),
 
-        // Because of the applied UserModeFilter, only ops will be able to
-        // request that the bot join or part channels. Note that this
-        // applies to all channels, not just channels within which they are
-        // ops.
+        // Because of the applied UserModeFilter, in order to request that the
+        // bot join or part a channel, the requesting user must have the op
+        // mode in that channel.
         new EventFilterPlugin(array(
             'filter' => Filters\UserModeFilter($userModePlugin, array('o')),
             'plugins' => array(
