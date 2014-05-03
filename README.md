@@ -87,7 +87,7 @@ return array(
         // Because of the applied ConnectionFilter, the bot will automatically
         // join #channel1 only on $connection1.
         new EventFilterPlugin(array(
-            'filter' => Filters\ConnectionFilter(array($connection1)),
+            'filter' => new Filters\ConnectionFilter(array($connection1)),
             'plugins' => array(
                 new AutoJoinPlugin(array('channels' => '#channel1')),
             ),
@@ -97,7 +97,7 @@ return array(
         // bot join or part a channel, the requesting user must have the op
         // mode in that channel.
         new EventFilterPlugin(array(
-            'filter' => Filters\UserModeFilter($userModePlugin, array('o')),
+            'filter' => new Filters\UserModeFilter($userModePlugin, array('o')),
             'plugins' => array(
                 new JoinPartPlugin,
             ),
@@ -107,7 +107,7 @@ return array(
         // user mask will be able to request that the bot terminate its
         // connection to a server.
         new EventFilterPlugin(array(
-            'filter' => Filters\UserFilter(array('nick1!user1@host1')),
+            'filter' => new Filters\UserFilter(array('nick1!user1@host1')),
             'plugins' => array(
                 new QuitPlugin,
             ),
