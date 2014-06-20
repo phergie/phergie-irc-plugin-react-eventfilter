@@ -121,7 +121,7 @@ return array(
 ## Supported Filters
 
 All filters supported by this plugin are under the
-`\Phergie\Irc\Plugin\React\EventMode` namespace.
+`\Phergie\Irc\Plugin\React\EventFilter` namespace.
 
 ### Metadata Filters
 
