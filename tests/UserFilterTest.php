@@ -8,10 +8,11 @@
  * @package Phergie\Irc\Plugin\React\EventFilter
  */
 
-namespace Phergie\Irc\Plugin\React\EventFilter;
+namespace Phergie\Irc\Tests\Plugin\React\EventFilter;
 
 use Phake;
 use Phergie\Irc\Event\EventInterface;
+use Phergie\Irc\Plugin\React\EventFilter\UserFilter;
 
 /**
  * Tests for the UserFilter class.

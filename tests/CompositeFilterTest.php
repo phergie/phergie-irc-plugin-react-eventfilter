@@ -8,9 +8,11 @@
  * @package Phergie\Irc\Plugin\React\EventFilter
  */
 
-namespace Phergie\Irc\Plugin\React\EventFilter;
+namespace Phergie\Irc\Tests\Plugin\React\EventFilter;
 
 use Phake;
+use Phergie\Irc\Plugin\React\EventFilter\AndFilter;
+use Phergie\Irc\Plugin\React\EventFilter\ComposerFilter;
 
 /**
  * Tests for the CompositeFilter class.

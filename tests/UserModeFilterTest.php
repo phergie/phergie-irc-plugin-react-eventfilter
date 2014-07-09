@@ -8,12 +8,13 @@
  * @package Phergie\Irc\Plugin\React\EventFilter
  */
 
-namespace Phergie\Irc\Plugin\React\EventFilter;
+namespace Phergie\Irc\Tests\Plugin\React\EventFilter;
 
 use Phake;
 use Phergie\Irc\ConnectionInterface;
 use Phergie\Irc\Event\EventInterface;
 use Phergie\Irc\Plugin\React\UserMode\Plugin as UserModePlugin;
+use Phergie\Irc\Plugin\React\EventFilter\UserModeFilter;
 
 /**
  * Tests for the UserModeFilter class.
