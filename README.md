@@ -243,7 +243,7 @@ Allows events that do not pass the contained filter, equivalent to the boolean
 
 ```php
 new NotFilter(
-    new UserFilter(array('nick1!user1@host1')),
+    new UserFilter(array('nick1!user1@host1'))
 )
 ```
 
