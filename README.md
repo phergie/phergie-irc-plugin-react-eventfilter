@@ -242,9 +242,9 @@ Allows events that do not pass the contained filter, equivalent to the boolean
 "not" operator.
 
 ```php
-new NotFilter(array(
+new NotFilter(
     new UserFilter(array('nick1!user1@host1')),
-))
+)
 ```
 
 This example allows events that do not originate from the user identified by
