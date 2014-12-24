@@ -11,12 +11,12 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "phergie/phergie-irc-bot-react": "dev-master"
+        "phergie/phergie-irc-bot-react": "~1"
     },
     "require-dev": {
         "phpunit/phpunit": "4.1.*",
         "phake/phake": "2.0.0-beta2",
-        "phergie/phergie-irc-plugin-react-usermode": "dev-master"
+        "phergie/phergie-irc-plugin-react-usermode": "~1"
     },
     "suggest": {
         "phergie/phergie-irc-plugin-react-usermode": "supports filtering of events by channel modes of originating users"
