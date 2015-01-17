@@ -213,7 +213,7 @@ operator.
 
 ```php
 new AndFilter(array(
-    new ConnectionFilter($connection),
+    new ConnectionFilter(array($connection)),
     new ChannelFilter(array('#channel1', '&channel2')),
 ))
 ```
