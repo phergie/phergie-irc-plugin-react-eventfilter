@@ -35,7 +35,18 @@ class UserModeFilterTest extends \PHPUnit_Framework_TestCase
 
         // Not an instance of UserEventInterface
         $userMode = $this->getMockUserModePlugin(array());
-        $data[] = array($userMode, Phake::mock('\Phergie\Irc\Event\EventInterface'), true);
+        $data[] = array($userMode, Phake::mock('\Phergie\Irc\Event\EventInterface'), null);
+
+        // Not originating from a user
+        $event = $this->getMockUserEvent();
+        Phake::when($event)->getNick()->thenReturn(null);
+        $data[] = array($userMode, $event, null);
+
+        // Not originating within a channel
+        $event = $this->getMockUserEvent();
+        Phake::when($event)->getCommand()->thenReturn('QUIT');
+        Phake::when($event)->getParams()->thenReturn([]);
+        $data[] = array($userMode, $event, null);
 
         // User does not have needed modes
         $event = $this->getMockUserEvent();

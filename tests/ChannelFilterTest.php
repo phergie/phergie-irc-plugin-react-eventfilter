@@ -47,14 +47,14 @@ class ChannelFilterTest extends \PHPUnit_Framework_TestCase
         $parameters = array(
             'JOIN' => 'channels',
             'PART' => 'channels',
-            'MODE' => 'target',
+            'MODE' => 'channel',
             'TOPIC' => 'channel',
             'KICK' => 'channel',
             'PRIVMSG' => 'receivers',
         );
 
         // Not an instance of UserEventInterface
-        $data[] = array(Phake::mock('\Phergie\Irc\Event\EventInterface'), true);
+        $data[] = array(Phake::mock('\Phergie\Irc\Event\EventInterface'), null);
 
         // Supported events in same channels as filter
         foreach (array('#channel1', '&channel2') as $channel) {
@@ -70,7 +70,7 @@ class ChannelFilterTest extends \PHPUnit_Framework_TestCase
         // Unsupported event
         $event = $this->getMockUserEvent();
         Phake::when($event)->getCommand()->thenReturn('QUIT');
-        $data[] = array($event, false);
+        $data[] = array($event, null);
 
         // Supported events in a different channel from the filter
         foreach ($parameters as $command => $parameter) {

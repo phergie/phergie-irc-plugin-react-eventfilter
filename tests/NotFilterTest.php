@@ -36,5 +36,8 @@ class NotFilterTest extends \PHPUnit_Framework_TestCase
 
         Phake::when($nestedFilter)->filter($event)->thenReturn(false);
         $this->assertTrue($filter->filter($event));
+
+        Phake::when($nestedFilter)->filter($event)->thenReturn(null);
+        $this->assertNull($filter->filter($event));
     }
 }

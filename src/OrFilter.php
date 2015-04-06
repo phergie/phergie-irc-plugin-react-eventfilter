@@ -24,16 +24,21 @@ class OrFilter extends CompositeFilter
      * Filters events that pass any contained filters.
      *
      * @param \Phergie\Irc\Event\EventInterface $event
-     * @return boolean TRUE if the event passes any contained filters, FALSE
-     *         otherwise
+     * @return boolean|null TRUE if the event passes any contained filters, FALSE
+     *         if it fails all filters, or NULL if all filters return NULL.
      */
     public function filter(EventInterface $event)
     {
+        $output = null;
         foreach ($this->filters as $filter) {
-            if ($filter->filter($event)) {
+            $result = $filter->filter($event);
+            if ($result === true) {
                 return true;
             }
+            if ($result === false) {
+                $output = false;
+            }
         }
-        return false;
+        return $output;
     }
 }

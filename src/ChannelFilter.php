@@ -40,7 +40,7 @@ class ChannelFilter implements FilterInterface
     protected $parameters = array(
         'JOIN' => 'channels',
         'PART' => 'channels',
-        'MODE' => 'target',
+        'MODE' => 'channel',
         'TOPIC' => 'channel',
         'KICK' => 'channel',
         'PRIVMSG' => 'receivers',
@@ -88,17 +88,21 @@ class ChannelFilter implements FilterInterface
      * channels.
      *
      * @param \Phergie\Irc\Event\EventInterface $event
-     * @return boolean TRUE if the event is not channel-specific or originated
-     *         from a matching channel associated with this filter, FALSE
-     *         otherwise
+     * @return boolean|null TRUE if the event originated from a matching channel
+     *         associated with this filter, FALSE if it originated from a non-matching
+     *         channel, or NULL if it is not associated with a channel.
      */
     public function filter(EventInterface $event)
     {
         if (!$event instanceof UserEventInterface) {
-            return true;
+            return null;
         }
 
         $channels = $this->getChannels($event);
+        if (empty($channels)) {
+            return null;
+        }
+
         $commonChannels = array_intersect($channels, $this->channels);
         if ($commonChannels) {
             return true;
