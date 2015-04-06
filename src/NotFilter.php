@@ -41,10 +41,15 @@ class NotFilter implements FilterInterface
      * Filters events that do not pass the contained filter.
      *
      * @param \Phergie\Irc\Event\EventInterface $event
-     * @return boolean TRUE if the contained filter fails, FALSE if it passes
+     * @return boolean|null TRUE if the contained filter fails, FALSE if it passes,
+     *         or NULL if it returns NULL.
      */
     public function filter(EventInterface $event)
     {
-        return !$this->filter->filter($event);
+        $result = $this->filter->filter($event);
+        if ($result === null) {
+            return null;
+        }
+        return !$result;
     }
 }

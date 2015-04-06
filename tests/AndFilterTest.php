@@ -35,6 +35,9 @@ class AndFilterTest extends \PHPUnit_Framework_TestCase
             array(true, false, false),
             array(false, true, false),
             array(true, true, true),
+            array(true, null, true),
+            array(false, null, false),
+            array(null, null, null),
         );
 
         foreach ($returns as $return) {

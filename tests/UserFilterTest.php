@@ -32,7 +32,12 @@ class UserFilterTest extends \PHPUnit_Framework_TestCase
         $data = array();
 
         // Not an instance of UserEventInterface
-        $data[] = array(Phake::mock('\Phergie\Irc\Event\EventInterface'), true);
+        $data[] = array(Phake::mock('\Phergie\Irc\Event\EventInterface'), null);
+
+        // Not originating from a user
+        $event = Phake::mock('\Phergie\Irc\Event\UserEventInterface');
+        Phake::when($event)->getNick()->thenReturn(null);
+        $data[] = array($event, null);
 
         // Non-matching user mask
         $event = $this->getMockUserEvent('nick3', 'user3', 'host3');

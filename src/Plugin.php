@@ -165,7 +165,7 @@ class Plugin extends AbstractPlugin
             ));
         } else {
             $eventObject = reset($eventObjects);
-            if (!$this->filter->filter($eventObject)) {
+            if ($this->filter->filter($eventObject) === false) {
                 $logger->info('Event did not pass filter, skipping', array(
                     'event' => $event,
                     'args' => $args,

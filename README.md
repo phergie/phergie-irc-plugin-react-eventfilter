@@ -257,8 +257,10 @@ Filters are merely classes that implement
 [`FilterInterface`](https://github.com/phergie/phergie-irc-plugin-react-eventfilter/blob/master/src/FilterInterface.php).
 This interface has a single method, `filter()`, which accepts an event object
 that implements [`EventInterface`](https://github.com/phergie/phergie-irc-event/blob/master/src/EventInterface.php)
-as its only parameter and returns `true` if the event should be allowed or
-`false` if it should not.
+as its only parameter and returns one of the following values:
+* `true` if the event should be allowed
+* `false` if the event should be denied
+* `null` if the event should be ignored by the filter ("pass-through")
 
 ## Tests
 

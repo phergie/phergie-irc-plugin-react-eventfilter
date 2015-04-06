@@ -45,18 +45,23 @@ class UserFilter implements FilterInterface
      * Filters events that are not user-specific or are from the specified users.
      *
      * @param \Phergie\Irc\Event\EventInterface $event
-     * @return boolean TRUE if the event is not user-specific or originated
-     *         from a user with a matching mask associated with this filter,
-     *         FALSE otherwise
+     * @return boolean|null TRUE if the event originated from a user with a matching mask
+     *         associated with this filter, FALSE if it originated from a user without a
+     *         matching mask, or NULL if it did not originate from a user.
      */
     public function filter(EventInterface $event)
     {
         if (!$event instanceof UserEventInterface) {
-            return true;
+            return null;
+        }
+
+        $nick = $event->getNick();
+        if ($nick === null) {
+            return null;
         }
 
         $userMask = sprintf('%s!%s@%s',
-            $event->getNick(),
+            $nick,
             $event->getUsername(),
             $event->getHost()
         );

@@ -24,7 +24,9 @@ interface FilterInterface
      * Evaluates an event for forwarding.
      *
      * @param \Phergie\Irc\Event\EventInterface $event
-     * @return boolean TRUE if the event should be forwarded, FALSE otherwise
+     * @return boolean|null TRUE if the event should be allowed, FALSE if it should be rejected,
+     *         or NULL if it should be ignored (ie. the event does not fall under the scope of
+     *         this filter)
      */
     public function filter(EventInterface $event);
 }

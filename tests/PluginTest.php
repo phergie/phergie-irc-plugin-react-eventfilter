@@ -57,10 +57,10 @@ class PluginTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        foreach (range(1, 3) as $index) {
+        foreach (range(1, 4) as $index) {
             $this->mockPlugins[$index] = $this->getMockPlugin();
         }
-        $this->mockPlugins[4] = new CallbackPlugin;
+        $this->mockPlugins[5] = new CallbackPlugin;
         $this->mockFilter = $this->getMockFilter();
         $this->plugin = new Plugin(array(
             'plugins' => $this->mockPlugins,
@@ -168,6 +168,11 @@ class PluginTest extends \PHPUnit_Framework_TestCase
             ->filter($this->identicalTo($passEvent))
             ->thenReturn(true);
 
+        $neutralEvent = $this->getMockEvent();
+        Phake::when($this->mockFilter)
+            ->filter($this->identicalTo($neutralEvent))
+            ->thenReturn(null);
+
         $failEvent = $this->getMockEvent();
         Phake::when($this->mockFilter)
             ->filter($this->identicalTo($failEvent))
@@ -192,16 +197,28 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         };
         Phake::when($this->mockPlugins[3])
             ->getSubscribedEvents()
-            ->thenReturn(array('fail' => $callbacks[3]));
+            ->thenReturn(array('neutral' => $callbacks[3]));
+
+        $neutralArgs = array($neutralEvent, 'bar');
+        $this->plugin->handleEvent('neutral', $neutralArgs);
+
+        $called[4] = false;
+        $callbacks[4] = function() use (&$called) {
+            $called[4] = true;
+        };
+        Phake::when($this->mockPlugins[4])
+            ->getSubscribedEvents()
+            ->thenReturn(array('fail' => $callbacks[4]));
 
         $this->plugin->handleEvent('pass', $passArgs);
 
-        $failArgs = array($failEvent, 'bar');
+        $failArgs = array($failEvent, 'baz');
         $this->plugin->handleEvent('fail', $failArgs);
 
         $this->assertTrue($called[1]);
         $this->assertTrue($called[2]);
-        $this->assertFalse($called[3]);
+        $this->assertTrue($called[3]);
+        $this->assertFalse($called[4]);
     }
 
     /**
@@ -235,10 +252,10 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $barArgs = array('barArg');
         $this->assertArrayHasKey('bar', $events);
         $this->assertInternalType('callable', $events['bar']);
-        $this->assertFalse($this->mockPlugins[4]->called);
+        $this->assertFalse($this->mockPlugins[5]->called);
         call_user_func_array($events['bar'], $barArgs);
-        $this->assertTrue($this->mockPlugins[4]->called);
-        $this->assertSame($barArgs, $this->mockPlugins[4]->args);
+        $this->assertTrue($this->mockPlugins[5]->called);
+        $this->assertSame($barArgs, $this->mockPlugins[5]->args);
     }
 
     /**

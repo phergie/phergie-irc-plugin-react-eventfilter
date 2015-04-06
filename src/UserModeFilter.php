@@ -57,19 +57,23 @@ class UserModeFilter extends ChannelFilter
      * specified modes.
      *
      * @param \Phergie\Irc\Event\EventInterface $event
-     * @return boolean TRUE if the event is not user-specific or originated
-     *         from a user with a matching mode associated with this filter,
-     *         FALSE otherwise
+     * @return boolean|null TRUE if the event originated from a user with a matching mode
+     *         associated with this filter, FALSE if the event originated from a user
+     *         without a matching mode, or NULL if the event did not originate from a user.
      */
     public function filter(EventInterface $event)
     {
         if (!$event instanceof UserEventInterface) {
-            return true;
+            return null;
+        }
+
+        $channels = $this->getChannels($event);
+        $nick = $event->getNick();
+        if (empty($channels) || $nick === null) {
+            return null;
         }
 
         $connection = $event->getConnection();
-        $channels = $this->getChannels($event);
-        $nick = $event->getNick();
 
         foreach ($channels as $channel) {
             $userModes = $this->userMode->getUserModes($connection, $channel, $nick);
