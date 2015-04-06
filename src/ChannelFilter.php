@@ -40,7 +40,7 @@ class ChannelFilter implements FilterInterface
     protected $parameters = array(
         'JOIN' => 'channels',
         'PART' => 'channels',
-        'MODE' => 'target',
+        'MODE' => 'channel',
         'TOPIC' => 'channel',
         'KICK' => 'channel',
         'PRIVMSG' => 'receivers',
