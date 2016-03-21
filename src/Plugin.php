@@ -10,10 +10,20 @@
 
 namespace Phergie\Irc\Plugin\React\EventFilter;
 
+use Evenement\EventEmitterInterface;
 use Phergie\Irc\Bot\React\AbstractPlugin;
+use Phergie\Irc\Bot\React\ClientAwareInterface;
+use Phergie\Irc\Bot\React\EventEmitterAwareInterface;
+use Phergie\Irc\Bot\React\EventQueueFactoryAwareInterface;
+use Phergie\Irc\Bot\React\EventQueueFactoryInterface;
 use Phergie\Irc\Bot\React\EventQueueInterface;
 use Phergie\Irc\Bot\React\PluginInterface;
+use Phergie\Irc\Client\React\ClientInterface;
+use Phergie\Irc\Client\React\LoopAwareInterface;
 use Phergie\Irc\Event\EventInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
+use React\EventLoop\LoopInterface;
 
 /**
  * Plugin for limiting processing of incoming events based on event metadata.
@@ -233,5 +243,80 @@ class Plugin extends AbstractPlugin
         }
 
         return $handlers;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        parent::setLogger($logger);
+        foreach ($this->plugins as $plugin) {
+            if (!($plugin instanceof LoggerAwareInterface)) {
+                continue;
+            }
+
+            $plugin->setLogger($logger);
+        }
+    }
+    
+    /**
+     * @inheritDoc
+     */
+    public function setEventEmitter(EventEmitterInterface $emitter)
+    {
+        parent::setEventEmitter($emitter);
+        foreach ($this->plugins as $plugin) {
+            if (!($plugin instanceof EventEmitterAwareInterface)) {
+                continue;
+            }
+
+            $plugin->setEventEmitter($emitter);
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setClient(ClientInterface $client)
+    {
+        parent::setClient($client);
+        foreach ($this->plugins as $plugin) {
+            if (!($plugin instanceof ClientAwareInterface)) {
+                continue;
+            }
+
+            $plugin->setClient($client);
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setEventQueueFactory(EventQueueFactoryInterface $queueFactory)
+    {
+        parent::setEventQueueFactory($queueFactory);
+        foreach ($this->plugins as $plugin) {
+            if (!($plugin instanceof EventQueueFactoryAwareInterface)) {
+                continue;
+            }
+
+            $plugin->setEventQueueFactory($queueFactory);
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLoop(LoopInterface $loop)
+    {
+        parent::setLoop($loop);
+        foreach ($this->plugins as $plugin) {
+            if (!($plugin instanceof LoopAwareInterface)) {
+                continue;
+            }
+
+            $plugin->setLoop($loop);
+        }
     }
 }
