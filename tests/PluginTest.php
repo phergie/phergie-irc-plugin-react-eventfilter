@@ -306,6 +306,39 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test that all set* calls are forwarded to encapsulated plugins.
+     */
+    public function testSetForwarding()
+    {
+        $mockedPlugin = Phake::mock('Phergie\Irc\Bot\React\AbstractPlugin');
+
+        $plugin = new Plugin(array(
+            'plugins' => array($mockedPlugin),
+            'filter' => $this->getMockFilter(),
+        ));
+
+        $logger = Phake::mock('Psr\Log\LoggerInterface');
+        $emitter = Phake::mock('Evenement\EventEmitterInterface');
+        $client = Phake::mock('Phergie\Irc\Client\React\ClientInterface');
+        $queueFactory = Phake::mock('Phergie\Irc\Bot\React\EventQueueFactoryInterface');
+        $loop = Phake::mock('React\EventLoop\LoopInterface');
+
+        $plugin->setLogger($logger);
+        $plugin->setEventEmitter($emitter);
+        $plugin->setClient($client);
+        $plugin->setEventQueueFactory($queueFactory);
+        $plugin->setLoop($loop);
+
+        Phake::inOrder(
+            Phake::verify($mockedPlugin)->setLogger($logger),
+            Phake::verify($mockedPlugin)->setEventEmitter($emitter),
+            Phake::verify($mockedPlugin)->setClient($client),
+            Phake::verify($mockedPlugin)->setEventQueueFactory($queueFactory),
+            Phake::verify($mockedPlugin)->setLoop($loop)
+        );
+    }
+
+    /**
      * Returns a mock plugin.
      *
      * @return \Phergie\Irc\Bot\React\PluginInterface
