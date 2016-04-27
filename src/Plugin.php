@@ -34,11 +34,13 @@ use React\EventLoop\LoopInterface;
 class Plugin extends AbstractPlugin
 {
     /**
+     * Plugins set
      * @var \Phergie\Irc\Bot\React\PluginInterface[]
      */
     protected $plugins;
 
     /**
+     * Filters Set
      * @var \Phergie\Irc\Plugin\React\EventFilter\FilterInterface
      */
     protected $filter;
@@ -247,7 +249,9 @@ class Plugin extends AbstractPlugin
     }
 
     /**
-     * @inheritDoc
+     * Set Logger Interface
+     * @param LoggerInterface $logger
+     * @return null
      */
     public function setLogger(LoggerInterface $logger)
     {
@@ -260,9 +264,10 @@ class Plugin extends AbstractPlugin
             $plugin->setLogger($logger);
         }
     }
-    
+
     /**
-     * @inheritDoc
+     * @param EventEmitterInterface $emitter
+     * @return null
      */
     public function setEventEmitter(EventEmitterInterface $emitter)
     {
@@ -277,7 +282,8 @@ class Plugin extends AbstractPlugin
     }
 
     /**
-     * @inheritDoc
+     * Set Client Interface
+     * @param ClientInterface $client
      */
     public function setClient(ClientInterface $client)
     {
@@ -292,7 +298,8 @@ class Plugin extends AbstractPlugin
     }
 
     /**
-     * @inheritDoc
+     * Set Event Queue Factory
+     * @param EventQueueFactoryInterface $queueFactory
      */
     public function setEventQueueFactory(EventQueueFactoryInterface $queueFactory)
     {
@@ -307,7 +314,8 @@ class Plugin extends AbstractPlugin
     }
 
     /**
-     * @inheritDoc
+     * Set Loop Interface
+     * @param LoopInterface $loop
      */
     public function setLoop(LoopInterface $loop)
     {
