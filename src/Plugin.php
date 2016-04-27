@@ -266,6 +266,7 @@ class Plugin extends AbstractPlugin
     }
 
     /**
+     * Set Event Emitter Interface
      * @param EventEmitterInterface $emitter
      * @return null
      */
