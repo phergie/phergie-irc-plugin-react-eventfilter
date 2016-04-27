@@ -114,6 +114,7 @@ class Plugin extends AbstractPlugin
     /**
      * Validates and extracts filter from configuration.
      *
+     * @param $config
      * @return \Phergie\Irc\Plugin\React\EventFilter\FilterInterface
      * @throws \RuntimeException Configuration lacks a valid filter
      */
