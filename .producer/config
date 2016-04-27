@@ -1,3 +1,6 @@
+; custom @package docblock value
+package = Phergie\Irc\Plugin\React\EventFilter
+
 ; commands to use for phpunit and phpdoc
 [commands]
 phpunit = ./vendor/bin/phpunit
