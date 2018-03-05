@@ -28,17 +28,29 @@ class UserFilter implements FilterInterface
      *
      * @var array
      */
-    protected $masks;
+    protected $masks = [];
 
     /**
-     * Accepts a list of masks identifying users from whom to forward events.
+     * Exception code used when masks are not set or not set as an array
+     */
+    const ERR_MASKS_NONARRAY = 1;
+
+    /**
+     * Accepts filter configuration.
      *
-     * @param array $masks
+     * Supported keys:
+     *
+     * masks - an array of masks identifying users from whom to forward events
+     *
+     * caseless - true to use the caseless preg modifier when comparing masks,
+     * true by default
+     *
+     * @param array $config
      * @see http://www.ircbeginner.com/opvinfo/masks.html
      */
-    public function __construct(array $masks)
+    public function __construct(array $config)
     {
-        $this->masks = $masks;
+        $this->masks = $this->getMasks($config);
     }
 
     /**
@@ -74,5 +86,24 @@ class UserFilter implements FilterInterface
         }
 
         return false;
+    }
+
+    /**
+     * Validates and extracts masks from configuration
+     *
+     * @param array $config
+     * @return array
+     * @throws \RuntimeException Configuration lacks an array of masks
+     */
+    protected function getMasks(array $config)
+    {
+        if (!isset($config['masks']) || !is_array($config['masks'])) {
+            throw new \RuntimeException(
+                'Configuration must contain the "masks" key and reference an array',
+                self::ERR_MASKS_NONARRAY
+            );
+        }
+
+        return $config['masks'];
     }
 }
