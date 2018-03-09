@@ -53,6 +53,42 @@ class UserFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Data provider for testFilterCaseless().
+     *
+     * @return array
+     */
+    public function dataProviderFilterCaseless()
+    {
+        $data = [];
+
+        $event = $this->getMockUserEvent('nick1', 'user1', 'host1');
+        $data[] = [$event, true];
+
+        $event = $this->getMockUserEvent('NICK1', 'USER1', 'HOST1');
+        $data[] = [$event, true];
+
+        return $data;
+    }
+
+    /**
+     * Data provider for testFilterCased().
+     *
+     * @return array
+     */
+    public function dataProviderFilterCased()
+    {
+        $data = [];
+
+        $event = $this->getMockUserEvent('nick1', 'user1', 'host1');
+        $data[] = [$event, true];
+
+        $event = $this->getMockUserEvent('NICK1', 'USER1', 'HOST1');
+        $data[] = [$event, false];
+
+        return $data;
+    }
+
+    /**
      * Data provider for testInvalidConfiguration().
      *
      * @return array
@@ -60,6 +96,15 @@ class UserFilterTest extends \PHPUnit_Framework_TestCase
     public function dataProviderInvalidConfiguration()
     {
         $data = [];
+
+        $data[] = [
+            [
+                'caseless' => 'not a boolean',
+                'masks' => []
+            ],
+            UserFilter::ERR_CASELESS_BOOLEAN,
+        ];
+
         $data[] = [
             [],
             UserFilter::ERR_MASKS_NONARRAY,
@@ -88,6 +133,31 @@ class UserFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $filter->filter($event));
     }
 
+    /**
+     * Tests matching caseless masks.
+     *
+     * @param \Phergie\Irc\Event\EventInterface $event
+     * @param boolean $expected
+     * @dataProvider dataProviderFilterCaseless
+     */
+    public function testFilterCaseless(EventInterface $event, $expected)
+    {
+        $filter = new UserFilter(['masks' => ['nick1!user1@host1'], ['caseless' => true]]);
+        $this->assertSame($expected, $filter->filter($event));
+    }
+
+    /**
+     * Tests matching cased masks.
+     *
+     * @param \Phergie\Irc\Event\EventInterface $event
+     * @param boolean $expected
+     * @dataProvider dataProviderFilterCased
+     */
+    public function testFilterCased(EventInterface $event, $expected)
+    {
+        $filter = new UserFilter(['masks' => ['nick1!user1@host1'], 'caseless' => false]);
+        $this->assertSame($expected, $filter->filter($event));
+    }
 
     /**
      * Tests that invalid configurations throw exceptions.

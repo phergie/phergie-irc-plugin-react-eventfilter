@@ -24,6 +24,13 @@ use Phergie\Irc\Event\UserEventInterface;
 class UserFilter implements FilterInterface
 {
     /**
+     * Caseless matching of masks. True for caseless, false for case to matter.
+     *
+     * @var boolean
+     */
+    protected $caseless = true;
+
+    /**
      * List of masks identifying users from whom to forward events
      *
      * @var array
@@ -31,9 +38,14 @@ class UserFilter implements FilterInterface
     protected $masks = [];
 
     /**
+     * Exception code used when caseless is not set as a boolean
+     */
+    const ERR_CASELESS_BOOLEAN = 1;
+
+    /**
      * Exception code used when masks are not set or not set as an array
      */
-    const ERR_MASKS_NONARRAY = 1;
+    const ERR_MASKS_NONARRAY = 2;
 
     /**
      * Accepts filter configuration.
@@ -50,6 +62,7 @@ class UserFilter implements FilterInterface
      */
     public function __construct(array $config)
     {
+        $this->caseless = $this->getCaseless($config);
         $this->masks = $this->getMasks($config);
     }
 
@@ -80,12 +93,39 @@ class UserFilter implements FilterInterface
 
         foreach ($this->masks as $mask) {
             $pattern = '/^' . str_replace('*', '.*', $mask) . '$/';
+            if ($this->caseless) {
+                $pattern .= "i";
+            }
+
             if (preg_match($pattern, $userMask)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Validates and extracts caseless from configuration
+     *
+     * @param array $config
+     * @return boolean
+     * @throws \RuntimeException Configuration doesn't specify caseless as boolean
+     */
+    protected function getCaseless(array $config)
+    {
+        if (isset($config['caseless'])) {
+            if (!is_bool($config['caseless'])) {
+                throw new \RuntimeException(
+                    'Configuration that contains the "caseless" key must reference a boolean',
+                    self::ERR_CASELESS_BOOLEAN
+                );
+            }
+
+            return $config['caseless'];
+        }
+
+        return $this->caseless;
     }
 
     /**
