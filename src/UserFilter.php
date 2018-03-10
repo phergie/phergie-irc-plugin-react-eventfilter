@@ -78,6 +78,7 @@ class UserFilter implements FilterInterface
 
         foreach ($this->masks as $mask) {
             $pattern = '/^' . str_replace('*', '.*', $mask) . '$/';
+
             if ($this->caseless) {
                 $pattern .= "i";
             }
