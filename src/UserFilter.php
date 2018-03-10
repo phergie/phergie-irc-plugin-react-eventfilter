@@ -28,7 +28,7 @@ class UserFilter implements FilterInterface
      *
      * @var boolean
      */
-    protected $caseless = true;
+    protected $caseless = false;
 
     /**
      * List of masks identifying users from whom to forward events
@@ -43,27 +43,17 @@ class UserFilter implements FilterInterface
     const ERR_CASELESS_BOOLEAN = 1;
 
     /**
-     * Exception code used when masks are not set or not set as an array
-     */
-    const ERR_MASKS_NONARRAY = 2;
-
-    /**
      * Accepts filter configuration.
      *
-     * Supported keys:
-     *
-     * masks - an array of masks identifying users from whom to forward events
-     *
-     * caseless - true to use the caseless preg modifier when comparing masks,
-     * true by default
-     *
-     * @param array $config
+     * @param array $masks An array of masks identifying users from whom to forward events
+     * @param boolean $caseless True to use the caseless preg modifier when comparing masks,
+     *        false by default
      * @see http://www.ircbeginner.com/opvinfo/masks.html
      */
-    public function __construct(array $config)
+    public function __construct(array $masks, $caseless = false)
     {
-        $this->caseless = $this->getCaseless($config);
-        $this->masks = $this->getMasks($config);
+        $this->masks = $masks;
+        $this->caseless = $caseless;
     }
 
     /**
@@ -103,47 +93,5 @@ class UserFilter implements FilterInterface
         }
 
         return false;
-    }
-
-    /**
-     * Validates and extracts caseless from configuration
-     *
-     * @param array $config
-     * @return boolean
-     * @throws \RuntimeException Configuration doesn't specify caseless as boolean
-     */
-    protected function getCaseless(array $config)
-    {
-        if (isset($config['caseless'])) {
-            if (!is_bool($config['caseless'])) {
-                throw new \RuntimeException(
-                    'Configuration that contains the "caseless" key must reference a boolean',
-                    self::ERR_CASELESS_BOOLEAN
-                );
-            }
-
-            return $config['caseless'];
-        }
-
-        return $this->caseless;
-    }
-
-    /**
-     * Validates and extracts masks from configuration
-     *
-     * @param array $config
-     * @return array
-     * @throws \RuntimeException Configuration lacks an array of masks
-     */
-    protected function getMasks(array $config)
-    {
-        if (!isset($config['masks']) || !is_array($config['masks'])) {
-            throw new \RuntimeException(
-                'Configuration must contain the "masks" key and reference an array',
-                self::ERR_MASKS_NONARRAY
-            );
-        }
-
-        return $config['masks'];
     }
 }

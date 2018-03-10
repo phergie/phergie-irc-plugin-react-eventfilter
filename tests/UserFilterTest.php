@@ -89,38 +89,6 @@ class UserFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Data provider for testInvalidConfiguration().
-     *
-     * @return array
-     */
-    public function dataProviderInvalidConfiguration()
-    {
-        $data = [];
-
-        $data[] = [
-            [
-                'caseless' => 'not a boolean',
-                'masks' => []
-            ],
-            UserFilter::ERR_CASELESS_BOOLEAN,
-        ];
-
-        $data[] = [
-            [],
-            UserFilter::ERR_MASKS_NONARRAY,
-        ];
-
-        $data[] = [
-            [
-                'masks' => 'not an array'
-            ],
-            UserFilter::ERR_MASKS_NONARRAY,
-        ];
-
-        return $data;
-    }
-
-    /**
      * Tests filter().
      *
      * @param \Phergie\Irc\Event\EventInterface $event
@@ -129,7 +97,7 @@ class UserFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testFilter(EventInterface $event, $expected)
     {
-        $filter = new UserFilter(['masks' => ['nick1!user1@host1', 'nick2*!user2*@host2*']]);
+        $filter = new UserFilter($masks = ['nick1!user1@host1', 'nick2*!user2*@host2*']);
         $this->assertSame($expected, $filter->filter($event));
     }
 
@@ -142,7 +110,7 @@ class UserFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testFilterCaseless(EventInterface $event, $expected)
     {
-        $filter = new UserFilter(['masks' => ['nick1!user1@host1'], ['caseless' => true]]);
+        $filter = new UserFilter($masks = ['nick1!user1@host1'], $caseless = true);
         $this->assertSame($expected, $filter->filter($event));
     }
 
@@ -155,25 +123,8 @@ class UserFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testFilterCased(EventInterface $event, $expected)
     {
-        $filter = new UserFilter(['masks' => ['nick1!user1@host1'], 'caseless' => false]);
+        $filter = new UserFilter($masks = ['nick1!user1@host1'], $caseless = false);
         $this->assertSame($expected, $filter->filter($event));
-    }
-
-    /**
-     * Tests that invalid configurations throw exceptions.
-     *
-     * @param array $config Configuration to apply
-     * @param int $code Expected exception code
-     * @dataProvider dataProviderInvalidConfiguration
-     */
-    public function testInvalidConfiguration(array $config, $code)
-    {
-        try {
-            $filter = new UserFilter($config);
-            $this->fail('Expected exception was not thrown');
-        } catch (\RuntimeException $e) {
-            $this->assertSame($code, $e->getCode());
-        }
     }
 
     /**
