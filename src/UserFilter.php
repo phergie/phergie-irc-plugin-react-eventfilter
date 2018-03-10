@@ -24,21 +24,31 @@ use Phergie\Irc\Event\UserEventInterface;
 class UserFilter implements FilterInterface
 {
     /**
+     * Caseless matching of masks. True for caseless, false for case to matter.
+     *
+     * @var boolean
+     */
+    protected $caseless = false;
+
+    /**
      * List of masks identifying users from whom to forward events
      *
      * @var array
      */
-    protected $masks;
+    protected $masks = [];
 
     /**
-     * Accepts a list of masks identifying users from whom to forward events.
+     * Accepts filter configuration.
      *
-     * @param array $masks
+     * @param array $masks An array of masks identifying users from whom to forward events
+     * @param boolean $caseless True to use the caseless preg modifier when comparing masks,
+     *        false by default
      * @see http://www.ircbeginner.com/opvinfo/masks.html
      */
-    public function __construct(array $masks)
+    public function __construct(array $masks, $caseless = false)
     {
         $this->masks = $masks;
+        $this->caseless = (bool) $caseless;
     }
 
     /**
@@ -68,6 +78,11 @@ class UserFilter implements FilterInterface
 
         foreach ($this->masks as $mask) {
             $pattern = '/^' . str_replace('*', '.*', $mask) . '$/';
+
+            if ($this->caseless) {
+                $pattern .= "i";
+            }
+
             if (preg_match($pattern, $userMask)) {
                 return true;
             }
