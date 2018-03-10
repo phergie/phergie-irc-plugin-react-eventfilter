@@ -38,11 +38,6 @@ class UserFilter implements FilterInterface
     protected $masks = [];
 
     /**
-     * Exception code used when caseless is not set as a boolean
-     */
-    const ERR_CASELESS_BOOLEAN = 1;
-
-    /**
      * Accepts filter configuration.
      *
      * @param array $masks An array of masks identifying users from whom to forward events
@@ -53,7 +48,7 @@ class UserFilter implements FilterInterface
     public function __construct(array $masks, $caseless = false)
     {
         $this->masks = $masks;
-        $this->caseless = $caseless;
+        $this->caseless = (bool) $caseless;
     }
 
     /**
