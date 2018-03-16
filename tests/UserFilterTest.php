@@ -49,6 +49,10 @@ class UserFilterTest extends \PHPUnit_Framework_TestCase
             $data[] = [$event, true];
         }
 
+        // Matching freenode style mask
+        $event = $this->getMockUserEvent('freenodenick', 'freenodeuser', 'unaffiliated/freenodenick');
+        $data[] = [$event, true];
+
         return $data;
     }
 
@@ -97,7 +101,11 @@ class UserFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testFilter(EventInterface $event, $expected)
     {
-        $filter = new UserFilter($masks = ['nick1!user1@host1', 'nick2*!user2*@host2*']);
+        $filter = new UserFilter($masks = [
+            'nick1!user1@host1',
+            'nick2*!user2*@host2*',
+            'freenodenick!freenodeuser@unaffiliated/freenodenick'
+        ]);
         $this->assertSame($expected, $filter->filter($event));
     }
 
