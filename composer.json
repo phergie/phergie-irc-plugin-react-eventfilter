@@ -1,4 +1,5 @@
 {
+    "abandoned": true,
     "name": "phergie/phergie-irc-plugin-react-eventfilter",
     "description": "Phergie plugin for limiting processing of incoming events based on event metadata",
     "keywords": [ "irc", "bot", "react", "plugin" ],
